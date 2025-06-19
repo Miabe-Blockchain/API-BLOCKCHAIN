@@ -1,0 +1,214 @@
+{"level":"error","message":"Erreur lors du démarrage: la base de donn�es � blockchain_diplomas � n'existe pas","name":"SequelizeConnectionError","original":{"code":"3D000","file":"postinit.c","length":115,"line":"1034","name":"error","routine":"InitPostgres","severity":"FATAL"},"parent":{"code":"3D000","file":"postinit.c","length":115,"line":"1034","name":"error","routine":"InitPostgres","severity":"FATAL"},"service":"blockchain-diploma-api","stack":"SequelizeConnectionError: la base de donn�es � blockchain_diplomas � n'existe pas\n    at Client._connectionCallback (D:\\bed\\node_modules\\sequelize\\lib\\dialects\\postgres\\connection-manager.js:145:24)\n    at Client._handleErrorWhileConnecting (D:\\bed\\node_modules\\pg\\lib\\client.js:336:19)\n    at Client._handleErrorMessage (D:\\bed\\node_modules\\pg\\lib\\client.js:356:19)\n    at Connection.emit (node:events:518:28)\n    at D:\\bed\\node_modules\\pg\\lib\\connection.js:116:12\n    at Parser.parse (D:\\bed\\node_modules\\pg-protocol\\dist\\parser.js:36:17)\n    at Socket.<anonymous> (D:\\bed\\node_modules\\pg-protocol\\dist\\index.js:11:42)\n    at Socket.emit (node:events:518:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","timestamp":"2025-06-19 06:50:32"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:53:48"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:53:49"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:53:49"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:53:49"}
+{"level":"info","message":"Serveur démarré sur le port 3000","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:53:49"}
+{"level":"info","message":"GET / - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:55:55"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:56:37"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:56:37"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:56:37"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:56:37"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:56:37"}
+{"level":"info","message":"GET / - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:56:43"}
+{"level":"info","message":"GET /api/auth/register - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 06:58:46"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:15"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:16"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:16"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:16"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:16"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:29"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:29"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:29"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:29"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:29"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:34"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:34"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:34"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:34"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:00:34"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:01:01"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:01:01"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:01:01"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:01:01"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:01:01"}
+{"level":"info","message":"GET /api/docs - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:03:36"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:07:46"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:07:46"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:07:46"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:07:46"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:07:46"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:05"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:05"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:05"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:05"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:05"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:06"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:08:06"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:28:33"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:28:34"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:28:34"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:28:34"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:28:34"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:29:11"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:07"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:07"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:07"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:07"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:07"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:09"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:10"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:33:10"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:34:05"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:34:05"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:34:05"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:34:05"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 07:34:05"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:24:40"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:24:40"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:24:40"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:24:40"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:24:40"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:25:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:25:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:25:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:25:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:25:11"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 13:25:12"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:34"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:34"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:34"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:34"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:34"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:40"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:40"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:40"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:40"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:54:40"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:18"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:18"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:18"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:18"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:18"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:18"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:57:19"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:50"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:51"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 21:59:51"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:00:57"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:00:57"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:00:57"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:00:57"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:00:57"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:02"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:02"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:02"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:03"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:03"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:28"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:28"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:28"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:28"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:28"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:39"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:39"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:39"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:39"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:01:39"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:04"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:04"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:04"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:04"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:04"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:29"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:29"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:29"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:29"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:29"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:38"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:38"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:38"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:38"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:38"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:38"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:02:39"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:04:10"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:05:20"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:05:20"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:05:20"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:05:20"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:05:20"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:50"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:50"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:50"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:50"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:50"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:53"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:53"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:53"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:53"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:10:53"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:11:04"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:11:04"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:11:04"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:11:04"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:11:04"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:11"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:11"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:12"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:12"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:48"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:48"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:48"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:48"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:48"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:49"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:50"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:50"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:50"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:13:50"}
+{"level":"info","message":"Connexion à la base de données établie","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:04"}
+{"level":"info","message":"Modèles synchronisés","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:05"}
+{"level":"info","message":"Blockchain service initialisé","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:05"}
+{"level":"info","message":"Blockchain initialisée","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:05"}
+{"level":"info","message":"Serveur démarré sur le port 5000","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:05"}
+{"level":"info","message":"GET /api/docs/ - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui.css - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui-bundle.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui-standalone-preset.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/docs/swagger-ui-init.js - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/docs/favicon-32x32.png - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:14:09"}
+{"level":"info","message":"GET /api/api/diplomas/1 - IP: ::1","service":"blockchain-diploma-api","timestamp":"2025-06-19 22:17:48"}

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: diplomas_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: blockchain_diplomas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 4606
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  redis:
+    image: redis:alpine
+    container_name: diplomas_redis
+    restart: always
+    ports:
+      - '6379:6379'
+
+  # Pour inclure l'API si tu veux
+  # api:
+  #   build: .
+  #   container_name: blockchain_api
+  #   restart: always
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - "5000:5000"
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/usr/src/app
+  #   command: npm run dev
+
+volumes:
+  pgdata:
