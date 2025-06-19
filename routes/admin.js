@@ -273,7 +273,7 @@ router.post('/activate-user/:userId', [
  * /api/admin/update-role/{userId}:
  *   post:
  *     summary: Modifier le rôle d'un utilisateur
- *     "description: Met à jour le rôle d'un utilisateur (ex: passer de pending à emetteur)"
+ *     description: "Met à jour le rôle d'un utilisateur (ex: passer de pending à emetteur)"
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
