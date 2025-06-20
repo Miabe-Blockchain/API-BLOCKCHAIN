@@ -203,11 +203,9 @@ router.get('/stats', async (req, res) => {
  *       - in: path
  *         name: userId
  *         required: true
- *         description: ID unique de l'utilisateur à activer
  *         schema:
  *           type: integer
- *           minimum: 1
- *           example: 123
+ *         description: ID de l'utilisateur à activer
  *     responses:
  *       200:
  *         description: Utilisateur activé avec succès
@@ -215,8 +213,6 @@ router.get('/stats', async (req, res) => {
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/UserActivationResponse'
- *       400:
- *         $ref: '#/components/responses/ValidationError'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  *       403:

@@ -29,17 +29,23 @@ class BlockchainService {
         "event DiplomaVerified(string indexed hash, address indexed verifier, uint256 timestamp, uint256 gasUsed)"
       ];
 
-      // Initialisation du contrat
-      this.contract = new ethers.Contract(
-        process.env.CONTRACT_ADDRESS,
-        contractABI,
-        this.provider
-      );
+      // Initialisation du contrat seulement si l'adresse est définie
+      if (process.env.CONTRACT_ADDRESS) {
+        this.contract = new ethers.Contract(
+          process.env.CONTRACT_ADDRESS,
+          contractABI,
+          this.provider
+        );
+        logger.info('Blockchain service initialisé avec contrat');
+      } else {
+        logger.warn('CONTRACT_ADDRESS non définie - fonctionnalités blockchain limitées');
+      }
 
       logger.info('Blockchain service initialisé');
     } catch (error) {
       logger.error('Erreur d\'initialisation blockchain:', error);
-      throw error;
+      // Ne pas faire planter l'application si la blockchain échoue
+      logger.warn('Continuation sans blockchain');
     }
   }
 

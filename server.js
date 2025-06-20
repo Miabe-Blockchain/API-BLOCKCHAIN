@@ -70,9 +70,13 @@ async function startServer() {
     await sequelize.sync();
     logger.info('Modèles synchronisés');
     
-    // Initialisation de la blockchain
-    await initializeBlockchain();
-    logger.info('Blockchain initialisée');
+    // Initialisation de la blockchain (optionnelle)
+    try {
+      await initializeBlockchain();
+      logger.info('Blockchain initialisée');
+    } catch (blockchainError) {
+      logger.warn('Échec de l\'initialisation blockchain, continuation sans blockchain:', blockchainError.message);
+    }
     
     app.listen(PORT, () => {
       logger.info(`Serveur démarré sur le port ${PORT}`);

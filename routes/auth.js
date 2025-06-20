@@ -9,6 +9,59 @@ const logger = require('../utils/logger');
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Inscription d'un nouvel utilisateur
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - first_name
+ *               - last_name
+ *               - role
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "Test1234"
+ *               first_name:
+ *                 type: string
+ *                 example: "Jean"
+ *               last_name:
+ *                 type: string
+ *                 example: "Dupont"
+ *               role:
+ *                 type: string
+ *                 enum: [emetteur, verificateur]
+ *                 example: "emetteur"
+ *               institution_name:
+ *                 type: string
+ *                 example: "Université Test"
+ *               phone:
+ *                 type: string
+ *                 example: "+33612345678"
+ *     responses:
+ *       201:
+ *         description: Compte créé avec succès
+ *       400:
+ *         description: Erreur de validation
+ *       409:
+ *         description: Email déjà utilisé
+ *       500:
+ *         description: Erreur serveur
+ */
+
 // Inscription
 router.post('/register', [
   body('email').isEmail().normalizeEmail(),
@@ -17,7 +70,10 @@ router.post('/register', [
   body('last_name').trim().isLength({ min: 2, max: 50 }),
   body('role').isIn(['emetteur', 'verificateur']),
   body('institution_name').optional().trim().isLength({ max: 100 }),
-  body('phone').optional().isMobilePhone()
+  body('phone')
+    .optional()
+    .matches(/^\+\d{8,15}$/)
+    .withMessage('Le numéro doit être au format international, ex: +22892504606')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -61,6 +117,57 @@ router.post('/register', [
     res.status(500).json({ error: 'Erreur lors de la création du compte' });
   }
 });
+
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Connexion utilisateur
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "Test1234"
+ *               twoFactorToken:
+ *                 type: string
+ *                 example: "123456"
+ *                 description: Code 2FA si activé
+ *     responses:
+ *       200:
+ *         description: Connexion réussie, retourne un token JWT
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Connexion réussie"
+ *                 token:
+ *                   type: string
+ *                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 user:
+ *                   type: object
+ *       400:
+ *         description: Erreur de validation
+ *       401:
+ *         description: Email ou mot de passe incorrect, ou code 2FA invalide
+ *       500:
+ *         description: Erreur serveur
+ */
 
 // Connexion
 router.post('/login', [
@@ -145,6 +252,34 @@ router.post('/login', [
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/2fa/setup:
+ *   post:
+ *     summary: Générer un secret 2FA pour l'utilisateur connecté
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Secret 2FA généré avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 secret:
+ *                   type: string
+ *                 qrCode:
+ *                   type: string
+ *                 manualEntryKey:
+ *                   type: string
+ *       400:
+ *         description: 2FA déjà activé
+ *       500:
+ *         description: Erreur lors de la configuration 2FA
+ */
+
 // Configuration 2FA - Génération du secret
 router.post('/2fa/setup', authenticateToken, async (req, res) => {
   try {
@@ -173,6 +308,37 @@ router.post('/2fa/setup', authenticateToken, async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la configuration 2FA' });
   }
 });
+
+/**
+ * @swagger
+ * /api/auth/2fa/verify:
+ *   post:
+ *     summary: Activer le 2FA pour l'utilisateur connecté
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: "123456"
+ *     responses:
+ *       200:
+ *         description: 2FA activé avec succès
+ *       400:
+ *         description: Erreur de validation ou configuration 2FA non initialisée
+ *       401:
+ *         description: Code de vérification invalide
+ *       500:
+ *         description: Erreur lors de l'activation 2FA
+ */
 
 // Activation 2FA
 router.post('/2fa/verify', authenticateToken, [
