@@ -65,39 +65,38 @@ const router = express.Router();
 // Inscription
 router.post('/register', [
   body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 8 }).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/),
-  body('first_name').trim().isLength({ min: 2, max: 50 }),
-  body('last_name').trim().isLength({ min: 2, max: 50 }),
-  body('role').isIn(['emetteur', 'verificateur']),
-  body('institution_name').optional().trim().isLength({ max: 100 }),
+  body('password').isLength({ min: 8 }).withMessage('Le mot de passe doit contenir au moins 8 caractères.'),
+  body('firstName').trim().isLength({ min: 2, max: 50 }),
+  body('lastName').trim().isLength({ min: 2, max: 50 }),
   body('phone')
-    .optional()
-    .matches(/^\+\d{8,15}$/)
+    .optional({ checkFalsy: true }) // Permet les chaînes vides
+    .matches(/^\+?\d{8,15}$/)
     .withMessage('Le numéro doit être au format international, ex: +22892504606')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      // Formatte les erreurs pour être plus lisibles côté client
+      const formattedErrors = errors.array().map(err => ({ field: err.param, message: err.msg }));
+      return res.status(400).json({ message: 'Erreur de validation', errors: formattedErrors });
     }
 
-    const { email, password, first_name, last_name, role, institution_name, phone } = req.body;
+    const { email, password, firstName, lastName, phone } = req.body;
 
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      return res.status(409).json({ error: 'Un compte avec cet email existe déjà' });
+      return res.status(409).json({ message: 'Un compte avec cet email existe déjà' });
     }
 
-    // Créer l'utilisateur
+    // Créer l'utilisateur avec les bons noms de champs
     const user = await User.create({
       email,
       password_hash: password, // Sera hashé automatiquement par le hook
-      first_name,
-      last_name,
-      role,
-      institution_name,
+      first_name: firstName,
+      last_name: lastName,
       phone,
+      role: 'pending', // Rôle par défaut à l'inscription
       status: 'active'
     });
 

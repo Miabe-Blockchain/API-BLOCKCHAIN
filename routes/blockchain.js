@@ -3,6 +3,7 @@ const express = require('express');
 const { authenticateToken, requireWallet } = require('../middleware/auth');
 const { blockchainService } = require('../services/blockchainService');
 const { Diploma } = require('../models');
+const etherscanService = require('../services/etherscanService');
 const router = express.Router();
 
 /**
@@ -166,5 +167,16 @@ router.post('/estimate-gas', authenticateToken, async (req, res) => {
  *       500:
  *         description: Erreur lors de l'estimation du gas
  */
+
+// Statut d'une transaction via Etherscan
+router.get('/etherscan/tx/:txHash', authenticateToken, async (req, res) => {
+  try {
+    const { txHash } = req.params;
+    const status = await etherscanService.getTxStatus(txHash);
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la requête Etherscan' });
+  }
+});
 
 module.exports = router;

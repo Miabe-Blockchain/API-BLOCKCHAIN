@@ -84,39 +84,36 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - diploma_name
- *               - diploma_type
- *               - issuer_institution
- *               - emission_date
- *               - mention
- *               - diploma_number
- *               - student_firstname
- *               - student_lastname
- *               - student_birthdate
- *               - student_phone
+ *               - studentFirstName
+ *               - studentLastName
+ *               - diplomaTitle
+ *               - issueDate
  *             properties:
- *               diploma_name:
+ *               studentFirstName:
  *                 type: string
- *               diploma_type:
+ *               studentLastName:
  *                 type: string
- *               issuer_institution:
+ *               diplomaTitle:
  *                 type: string
- *               emission_date:
+ *               issueDate:
  *                 type: string
  *                 format: date
+ *               diplomaType:
+ *                 type: string
+ *                 description: "Type de diplôme (ex: Licence, Master...)"
  *               mention:
  *                 type: string
- *               diploma_number:
+ *                 description: "Mention obtenue (ex: Bien, Très bien...)"
+ *               diplomaNumber:
  *                 type: string
- *               student_firstname:
- *                 type: string
- *               student_lastname:
- *                 type: string
- *               student_birthdate:
+ *                 description: "Numéro ou identifiant unique du diplôme"
+ *               studentBirthdate:
  *                 type: string
  *                 format: date
- *               student_phone:
+ *                 description: "Date de naissance de l'étudiant"
+ *               studentPhone:
  *                 type: string
+ *                 description: "Téléphone de l'étudiant"
  *     responses:
  *       201:
  *         $ref: '#/components/responses/DiplomaCreated'
@@ -127,22 +124,16 @@ const router = express.Router();
  *       500:
  *         description: Erreur lors de la création du diplôme
  */
-router.post('/', authenticateToken, requireRole('emetteur'), requireWallet, [
-  body('diploma_name').trim().isLength({ min: 2, max: 200 }),
-  body('diploma_type').isIn([
-    'Licence', 'Master', 'Doctorat', 'BTS', 'DUT', 'Certificat',
-    'Diplôme d\'ingénieur', 'CAP', 'Baccalauréat', 'Autre'
-  ]),
-  body('issuer_institution').trim().isLength({ min: 2, max: 200 }),
-  body('emission_date').isISO8601().toDate(),
-  body('mention').isIn([
-    'Passable', 'Assez bien', 'Bien', 'Très bien', 'Excellent', 'Sans mention'
-  ]),
-  body('diploma_number').trim().isLength({ min: 1, max: 100 }),
-  body('student_firstname').trim().isLength({ min: 2, max: 50 }),
-  body('student_lastname').trim().isLength({ min: 2, max: 50 }),
-  body('student_birthdate').isISO8601().toDate(),
-  body('student_phone').isMobilePhone()
+router.post('/', authenticateToken, requireRole(['emetteur', 'admin']), [
+  body('studentFirstName').trim().notEmpty().withMessage("Le prénom de l'étudiant est requis."),
+  body('studentLastName').trim().notEmpty().withMessage("Le nom de l'étudiant est requis."),
+  body('diplomaTitle').trim().notEmpty().withMessage("L'intitulé du diplôme est requis."),
+  body('issueDate').isISO8601().toDate().withMessage("La date d'émission est requise au format YYYY-MM-DD."),
+  body('diplomaType').isIn(['Licence', 'Master', 'Doctorat', 'BTS', 'DUT', 'Certificat', 'Diplôme d\'ingénieur', 'CAP', 'Baccalauréat', 'Autre']).withMessage("Un type de diplôme valide est requis."),
+  body('mention').isIn(['Passable', 'Assez bien', 'Bien', 'Très bien', 'Excellent', 'Sans mention']).withMessage("Une mention valide est requise."),
+  body('diplomaNumber').trim().notEmpty().withMessage("Le numéro du diplôme est requis."),
+  body('studentBirthdate').isISO8601().toDate().withMessage("La date de naissance de l'étudiant est requise."),
+  body('studentPhone').isMobilePhone('any').withMessage("Un numéro de téléphone valide pour l'étudiant est requis.")
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -150,33 +141,45 @@ router.post('/', authenticateToken, requireRole('emetteur'), requireWallet, [
       return res.status(400).json({ errors: errors.array() });
     }
 
+    if (!req.user.institution_name) {
+      return res.status(400).json({ 
+        error: "Impossible de créer un diplôme. L'utilisateur émetteur doit d'abord définir le nom de son institution dans son profil." 
+      });
+    }
+
+    const { studentFirstName, studentLastName, diplomaTitle, issueDate, diplomaType, mention, studentBirthdate, studentPhone, diplomaNumber } = req.body;
+    
     const diplomaData = {
-      ...req.body,
-      issuer_id: req.user.id
+      student_firstname: studentFirstName,
+      student_lastname: studentLastName,
+      diploma_name: diplomaTitle,
+      emission_date: issueDate,
+      issuer_id: req.user.id,
+      issuer_institution: req.user.institution_name,
+      diploma_type: diplomaType,
+      mention: mention,
+      diploma_number: diplomaNumber,
+      student_birthdate: studentBirthdate,
+      student_phone: studentPhone
     };
+    
+    const diplomaHash = qrService.generateDiplomaHash(diplomaData);
+    diplomaData.hash = diplomaHash;
 
-    // Générer le hash unique du diplôme
-    const hash = qrService.generateDiplomaHash(diplomaData);
-    diplomaData.hash = hash;
-
-    // Vérifier l'unicité du hash
-    const existingDiploma = await Diploma.findOne({ where: { hash } });
+    const existingDiploma = await Diploma.findOne({ where: { hash: diplomaData.hash } });
     if (existingDiploma) {
       return res.status(409).json({ error: 'Un diplôme identique existe déjà' });
     }
 
-    // Générer le QR code
-    const { qrCodeDataURL, verificationUrl } = await qrService.generateQRCode(hash);
+    const { qrCodeDataURL, verificationUrl } = await qrService.generateQRCode(diplomaData.hash);
     diplomaData.qr_code_url = qrCodeDataURL;
 
-    // Créer le diplôme en base
     const diploma = await Diploma.create(diplomaData);
 
-    // Estimer les coûts blockchain
     try {
       const gasEstimate = await blockchainService.estimateGasForDiplomaStorage(diplomaData);
       
-      logger.info(`Diplôme créé: ${hash} - Coût estimé: ${gasEstimate.estimatedCost} ETH`);
+      logger.info(`Diplôme créé: ${diploma.hash} - Coût estimé: ${gasEstimate.estimatedCost} ETH`);
       res.status(201).json({
         message: 'Diplôme créé avec succès',
         diploma: {
@@ -207,8 +210,19 @@ router.post('/', authenticateToken, requireRole('emetteur'), requireWallet, [
       });
     }
   } catch (error) {
-    logger.error('Erreur création diplôme:', error);
-    res.status(500).json({ error: 'Erreur lors de la création du diplôme' });
+    // Log de l'erreur complète pour le débogage côté serveur
+    logger.error('Erreur détaillée lors de la création du diplôme:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      original: error.original // Pour les erreurs Sequelize
+    });
+
+    // Envoi d'un message d'erreur plus détaillé au client
+    res.status(500).json({ 
+      error: 'Erreur serveur lors de la création du diplôme.',
+      details: error.message // Message d'erreur exact
+    });
   }
 });
 
@@ -226,7 +240,8 @@ router.post('/', authenticateToken, requireRole('emetteur'), requireWallet, [
  *         name: diplomaId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *         description: ID du diplôme à enregistrer
  *     responses:
  *       200:
@@ -238,8 +253,8 @@ router.post('/', authenticateToken, requireRole('emetteur'), requireWallet, [
  *       500:
  *         description: Erreur lors de l'enregistrement sur la blockchain
  */
-router.post('/:diplomaId/register-blockchain', authenticateToken, requireRole('emetteur'), requireWallet, [
-  param('diplomaId').isInt().toInt()
+router.post('/:diplomaId/register-blockchain', authenticateToken, requireRole(['emetteur', 'admin']), requireWallet, [
+  param('diplomaId').isUUID().withMessage("L'ID du diplôme doit être un UUID valide.")
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -249,7 +264,6 @@ router.post('/:diplomaId/register-blockchain', authenticateToken, requireRole('e
 
     const { diplomaId } = req.params;
     
-    // Vérifier que le diplôme existe et appartient à l'utilisateur
     const diploma = await Diploma.findOne({
       where: { 
         id: diplomaId, 
@@ -265,12 +279,10 @@ router.post('/:diplomaId/register-blockchain', authenticateToken, requireRole('e
       return res.status(409).json({ error: 'Ce diplôme est déjà enregistré sur la blockchain' });
     }
 
-    // Enregistrer sur la blockchain
-    const blockchainResult = await blockchainService.registerDiploma(diploma);
+    const blockchainResult = await blockchainService.storeDiplomaOnBlockchain(diploma, req.user.wallet_address);
     
-    // Mettre à jour le diplôme en base
     await diploma.update({
-      status: 'blockchain_registered',
+      status: 'blockchain_confirmed',
       blockchain_tx_hash: blockchainResult.transactionHash,
       blockchain_registered_at: new Date()
     });
@@ -287,8 +299,15 @@ router.post('/:diplomaId/register-blockchain', authenticateToken, requireRole('e
     });
 
   } catch (error) {
-    logger.error('Erreur enregistrement blockchain:', error);
-    res.status(500).json({ error: 'Erreur lors de l\'enregistrement sur la blockchain' });
+    logger.error('Erreur détaillée enregistrement blockchain:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    res.status(500).json({ 
+      error: 'Erreur lors de l\'enregistrement sur la blockchain',
+      details: error.message
+    });
   }
 });
 
@@ -348,12 +367,17 @@ router.post('/:diplomaId/register-blockchain', authenticateToken, requireRole('e
  *       500:
  *         description: Erreur lors de la récupération des diplômes
  */
-router.get('/', authenticateToken, requireRole('emetteur'), async (req, res) => {
+router.get('/', authenticateToken, requireRole(['admin', 'emetteur', 'verificateur']), async (req, res) => {
   try {
     const { page = 1, limit = 10, status, diploma_type } = req.query;
     const offset = (page - 1) * limit;
 
-    const whereClause = { issuer_id: req.user.id };
+    let whereClause = {};
+    // L'admin et le verificateur voient tout, l'émetteur ne voit que les siens
+    if (req.user.role === 'emetteur') {
+        whereClause.issuer_id = req.user.id;
+    }
+    
     if (status) whereClause.status = status;
     if (diploma_type) whereClause.diploma_type = diploma_type;
 
@@ -414,7 +438,7 @@ router.get('/', authenticateToken, requireRole('emetteur'), async (req, res) => 
  *       500:
  *         description: Erreur lors de la récupération du diplôme
  */
-router.get('/:diplomaId', authenticateToken, requireRole('emetteur'), [
+router.get('/:diplomaId', authenticateToken, requireRole(['emetteur', 'admin', 'verificateur']), [
   param('diplomaId').isInt().toInt()
 ], async (req, res) => {
   try {
@@ -425,11 +449,14 @@ router.get('/:diplomaId', authenticateToken, requireRole('emetteur'), [
 
     const { diplomaId } = req.params;
     
+    let whereClause = { id: diplomaId };
+    // L'admin et le verificateur peuvent voir n'importe quel diplôme, l'émetteur seulement les siens
+    if (req.user.role === 'emetteur') {
+        whereClause.issuer_id = req.user.id;
+    }
+
     const diploma = await Diploma.findOne({
-      where: { 
-        id: diplomaId, 
-        issuer_id: req.user.id 
-      }
+      where: whereClause
     });
 
     if (!diploma) {
@@ -456,7 +483,6 @@ router.get('/verify/:hash', [
 
     const { hash } = req.params;
 
-    // Rechercher le diplôme
     const diploma = await Diploma.findOne({
       where: { hash },
       include: [{
@@ -473,7 +499,6 @@ router.get('/verify/:hash', [
       });
     }
 
-    // Enregistrer la vérification
     await Verification.create({
       diploma_id: diploma.id,
       verified_at: new Date(),
@@ -481,7 +506,6 @@ router.get('/verify/:hash', [
       user_agent: req.get('User-Agent')
     });
 
-    // Vérifier sur la blockchain si enregistré
     let blockchainVerification = null;
     if (diploma.status === 'blockchain_registered' && diploma.blockchain_tx_hash) {
       try {
@@ -518,7 +542,7 @@ router.get('/verify/:hash', [
 });
 
 // Supprimer un diplôme (uniquement si non enregistré sur blockchain)
-router.delete('/:diplomaId', authenticateToken, requireRole('emetteur'), [
+router.delete('/:diplomaId', authenticateToken, requireRole(['emetteur']), [
   param('diplomaId').isInt().toInt()
 ], async (req, res) => {
   try {

@@ -457,60 +457,19 @@ router.post('/update-role/:userId', [
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.get('/users', async (req, res) => {
-  try {
-    const { 
-      page = 1, 
-      limit = 10, 
-      role, 
-      status, 
-      search 
-    } = req.query;
-
-    const offset = (parseInt(page) - 1) * parseInt(limit);
-    const whereClause = {};
-
-    // Filtres
-    if (role) whereClause.role = role;
-    if (status) whereClause.status = status;
-    
-    // Recherche
-    if (search) {
-      const { Op } = require('sequelize');
-      whereClause[Op.or] = [
-        { firstname: { [Op.iLike]: `%${search}%` } },
-        { lastname: { [Op.iLike]: `%${search}%` } },
-        { email: { [Op.iLike]: `%${search}%` } }
-      ];
+router.get('/users', authenticateToken, requireRole('admin'), async (req, res) => {
+    try {
+        const users = await User.findAll({
+            order: [['created_at', 'DESC']],
+            attributes: { exclude: ['password_hash', 'two_factor_secret', 'email_verification_token'] }
+        });
+        res.json(users);
+    } catch (error) {
+        logger.error('Erreur récupération utilisateurs admin:', error);
+        res.status(500).json({ 
+            error: 'Erreur lors de la récupération des utilisateurs' 
+        });
     }
-
-    const { count, rows: users } = await User.findAndCountAll({
-      where: whereClause,
-      limit: parseInt(limit),
-      offset: offset,
-      order: [['created_at', 'DESC']],
-      attributes: [
-        'id', 'firstname', 'lastname', 'email', 'role', 
-        'status', 'institution', 'created_at'
-      ]
-    });
-
-    res.json({
-      users,
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(count / parseInt(limit)),
-        totalItems: count,
-        itemsPerPage: parseInt(limit)
-      }
-    });
-
-  } catch (error) {
-    logger.error('Erreur récupération utilisateurs admin:', error);
-    res.status(500).json({ 
-      error: 'Erreur lors de la récupération des utilisateurs' 
-    });
-  }
 });
 
 /**

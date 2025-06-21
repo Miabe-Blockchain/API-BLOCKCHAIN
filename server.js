@@ -18,11 +18,15 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Configuration CORS pour autoriser le frontend Next.js
+const corsOptions = {
+  origin: 'http://localhost:3001',
+  optionsSuccessStatus: 200 // Pour les navigateurs plus anciens
+};
+app.use(cors(corsOptions));
+
 // Middleware de sécurité
 app.use(helmet());
-app.use(cors({
-  origin: 'http://localhost:5000' // ou l'URL de ton front
-}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -34,7 +38,7 @@ app.use(limiter);
 
 // Parsing
 app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Logging des requêtes
 app.use((req, res, next) => {
@@ -66,8 +70,8 @@ async function startServer() {
     await sequelize.authenticate();
     logger.info('Connexion à la base de données établie');
     
-    // Synchronisation des modèles
-    await sequelize.sync();
+    // Synchronisation des modèles - { alter: true } met à jour le schéma de la BDD
+    await sequelize.sync({ alter: true });
     logger.info('Modèles synchronisés');
     
     // Initialisation de la blockchain (optionnelle)

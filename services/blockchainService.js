@@ -10,9 +10,9 @@ class BlockchainService {
 
   async initialize() {
     try {
-      // Connexion au provider (Polygon Mumbai testnet ou mainnet)
+      // Utilisation de l'URL RPC configurée dans l'environnement
       this.provider = new ethers.JsonRpcProvider(
-        process.env.BLOCKCHAIN_RPC_URL || 'https://rpc-mumbai.maticvigil.com'
+        process.env.BLOCKCHAIN_RPC_URL || 'https://rpc-mumbai.matic.today'
       );
 
       // Wallet du serveur pour les opérations système
@@ -20,25 +20,23 @@ class BlockchainService {
         this.signer = new ethers.Wallet(process.env.PRIVATE_KEY, this.provider);
       }
 
-      // ABI du smart contract
+      // ABI du smart contract - corrigé pour correspondre au contrat DiplomaVerifier
       const contractABI = [
-        "function storeDiploma(string memory hash, string memory diplomaName, string memory diplomaType, string memory issuerInstitution, uint256 emissionDate, string memory mention, string memory diplomaNumber, string memory studentName, uint256 studentBirthdate, string memory studentPhone) public payable",
-        "function verifyDiploma(string memory hash) public payable returns (bool, tuple(string diplomaName, string diplomaType, string issuerInstitution, uint256 emissionDate, string mention, string diplomaNumber, string studentName, uint256 studentBirthdate, string studentPhone, address issuer, uint256 timestamp, bool exists))",
-        "function getDiplomaDetails(string memory hash) public view returns (tuple(string diplomaName, string diplomaType, string issuerInstitution, uint256 emissionDate, string mention, string diplomaNumber, string studentName, uint256 studentBirthdate, string memory studentPhone, address issuer, uint256 timestamp, bool exists))",
-        "event DiplomaStored(string indexed hash, address indexed issuer, string diplomaName, string studentName, uint256 timestamp)",
-        "event DiplomaVerified(string indexed hash, address indexed verifier, uint256 timestamp, uint256 gasUsed)"
+        "function storeDiploma(string memory _hash, string memory _diplomaName, string memory _diplomaType, string memory _issuerInstitution, uint256 _emissionDate, string memory _mention, string memory _diplomaNumber, string memory _studentName, uint256 _studentBirthdate, string memory _studentPhone) public",
+        "function getDiplomaDetails(string memory _hash) public view returns (string memory diplomaName, string memory diplomaType, string memory issuerInstitution, uint256 emissionDate, string memory mention, string memory diplomaNumber, string memory studentName, uint256 studentBirthdate, string memory studentPhone, address issuer, uint256 timestamp, bool exists)",
+        "event DiplomaStored(string indexed hash, address indexed issuer, string diplomaName, string studentName, uint256 timestamp)"
       ];
 
       // Initialisation du contrat seulement si l'adresse est définie
-      if (process.env.CONTRACT_ADDRESS) {
+      if (process.env.DIPLOMA_CONTRACT_ADDRESS) {
         this.contract = new ethers.Contract(
-          process.env.CONTRACT_ADDRESS,
+          process.env.DIPLOMA_CONTRACT_ADDRESS,
           contractABI,
           this.provider
         );
         logger.info('Blockchain service initialisé avec contrat');
       } else {
-        logger.warn('CONTRACT_ADDRESS non définie - fonctionnalités blockchain limitées');
+        logger.warn('DIPLOMA_CONTRACT_ADDRESS non définie - fonctionnalités blockchain limitées');
       }
 
       logger.info('Blockchain service initialisé');
@@ -79,9 +77,13 @@ class BlockchainService {
     }
   }
 
-  async storeDiplomaOnBlockchain(diplomaData, userWallet) {
+  async storeDiplomaOnBlockchain(diplomaData) {
     try {
-      const contractWithSigner = this.contract.connect(userWallet);
+      if (!this.signer) {
+        throw new Error("Le portefeuille du serveur n'est pas configuré. Vérifiez votre PRIVATE_KEY dans le .env.");
+      }
+      
+      const contractWithSigner = this.contract.connect(this.signer);
 
       const tx = await contractWithSigner.storeDiploma(
         diplomaData.hash,
@@ -93,8 +95,7 @@ class BlockchainService {
         diplomaData.diploma_number,
         `${diplomaData.student_firstname} ${diplomaData.student_lastname}`,
         Math.floor(new Date(diplomaData.student_birthdate).getTime() / 1000),
-        diplomaData.student_phone,
-        { value: ethers.parseEther("0.01") } // Frais de stockage
+        diplomaData.student_phone
       );
 
       const receipt = await tx.wait();
@@ -111,23 +112,12 @@ class BlockchainService {
     }
   }
 
-  async verifyDiplomaOnBlockchain(hash, userWallet) {
+  async verifyDiplomaOnBlockchain(hash) {
     try {
-      const contractWithSigner = this.contract.connect(userWallet);
-
-      const tx = await contractWithSigner.verifyDiploma(hash, {
-        value: ethers.parseEther("0.005") // Frais de vérification
-      });
-
-      const receipt = await tx.wait();
-      
       // Récupération des détails du diplôme
       const diplomaDetails = await this.contract.getDiplomaDetails(hash);
 
       return {
-        transactionHash: receipt.hash,
-        blockNumber: receipt.blockNumber,
-        gasUsed: receipt.gasUsed.toString(),
         isValid: diplomaDetails.exists,
         diplomaInfo: diplomaDetails.exists ? {
           diplomaName: diplomaDetails.diplomaName,
@@ -151,7 +141,15 @@ class BlockchainService {
 
   async getTransactionDetails(txHash) {
     try {
+      if (!ethers.isHexString(txHash, 32)) {
+        throw new Error('Format de hash de transaction invalide.');
+      }
+      
       const tx = await this.provider.getTransaction(txHash);
+      if (!tx) {
+        return null; // ou lancer une erreur 404
+      }
+      
       const receipt = await this.provider.getTransactionReceipt(txHash);
 
       return {

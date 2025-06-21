@@ -69,6 +69,10 @@ const Diploma = sequelize.define('Diploma', {
     type: DataTypes.STRING,
     allowNull: true
   },
+  blockchain_registered_at: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
   qr_code_url: {
     type: DataTypes.TEXT,
     allowNull: true

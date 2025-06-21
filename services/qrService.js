@@ -7,15 +7,14 @@ class QRService {
       diplomaData.diploma_name,
       diplomaData.diploma_type,
       diplomaData.issuer_institution,
-      diplomaData.emission_date,
+      new Date(diplomaData.emission_date).toISOString(),
       diplomaData.mention,
       diplomaData.diploma_number,
       diplomaData.student_firstname,
       diplomaData.student_lastname,
-      diplomaData.student_birthdate,
+      new Date(diplomaData.student_birthdate).toISOString(),
       diplomaData.student_phone,
-      diplomaData.issuer_id,
-      Date.now().toString()
+      diplomaData.issuer_id
     ].join('|');
 
     return crypto.createHash('sha256').update(dataString).digest('hex');

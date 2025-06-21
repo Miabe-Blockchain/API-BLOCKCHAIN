@@ -35,8 +35,11 @@ const requireRole = (...roles) => {
     if (!req.user) {
       return res.status(401).json({ error: 'Authentification requise' });
     }
+    
+    // Aplatir le tableau de rôles si un tableau est passé en premier argument
+    const allowedRoles = roles.flat();
 
-    if (!roles.includes(req.user.role)) {
+    if (!allowedRoles.includes(req.user.role)) {
       return res.status(403).json({ error: 'Permissions insuffisantes' });
     }
 
