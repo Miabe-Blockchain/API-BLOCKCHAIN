@@ -27,6 +27,10 @@ const Verification = sequelize.define('Verification', {
     type: DataTypes.ENUM('valid', 'invalid', 'not_found'),
     allowNull: false
   },
+  verification_notes: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   ip_address: {
     type: DataTypes.STRING,
     allowNull: true

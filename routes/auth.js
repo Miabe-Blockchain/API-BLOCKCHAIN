@@ -441,4 +441,51 @@ router.get('/verify-token', authenticateToken, (req, res) => {
   });
 });
 
+// Route de test pour créer un utilisateur admin
+router.post('/create-test-admin', async (req, res) => {
+  try {
+    // Vérifier si l'admin de test existe déjà
+    const existingAdmin = await User.findOne({ 
+      where: { email: 'admin@test.com' } 
+    });
+
+    if (existingAdmin) {
+      return res.json({ 
+        message: 'Utilisateur admin de test existe déjà',
+        user: {
+          id: existingAdmin.id,
+          email: existingAdmin.email,
+          role: existingAdmin.role
+        }
+      });
+    }
+
+    // Créer l'utilisateur admin de test
+    const adminUser = await User.create({
+      email: 'admin@test.com',
+      password_hash: 'Admin123!', // Sera hashé automatiquement
+      first_name: 'Admin',
+      last_name: 'Test',
+      role: 'admin',
+      status: 'active',
+      institution_name: 'Institution de Test',
+      phone: '+1234567890'
+    });
+
+    logger.info('Utilisateur admin de test créé:', adminUser.email);
+
+    res.status(201).json({
+      message: 'Utilisateur admin de test créé avec succès',
+      user: {
+        id: adminUser.id,
+        email: adminUser.email,
+        role: adminUser.role
+      }
+    });
+  } catch (error) {
+    logger.error('Erreur création admin de test:', error);
+    res.status(500).json({ error: 'Erreur lors de la création de l\'utilisateur de test' });
+  }
+});
+
 module.exports = router;

@@ -22,7 +22,8 @@ class QRService {
 
   async generateQRCode(hash) {
     try {
-      const verificationUrl = `${process.env.FRONTEND_URL}/verify/${hash}`;
+      // URL de vérification publique
+      const verificationUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/diplomas/verify/${hash}`;
       const qrCodeDataURL = await QRCode.toDataURL(verificationUrl, {
         width: 300,
         margin: 2,

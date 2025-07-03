@@ -3,6 +3,7 @@ const express = require('express');
 const { body, param, validationResult } = require('express-validator');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 const { User, Diploma, Verification, BlockchainTransaction } = require('../models');
+const { Op } = require('sequelize');
 const logger = require('../utils/logger');
 const router = express.Router();
 
@@ -204,7 +205,8 @@ router.get('/stats', async (req, res) => {
  *         name: userId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *         description: ID de l'utilisateur à activer
  *     responses:
  *       200:
@@ -224,9 +226,8 @@ router.get('/stats', async (req, res) => {
  */
 router.post('/activate-user/:userId', [
   param('userId')
-    .isInt({ min: 1 })
-    .withMessage('L\'ID utilisateur doit être un entier positif')
-    .toInt()
+    .isUUID()
+    .withMessage('L\'ID utilisateur doit être un UUID valide')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -279,9 +280,9 @@ router.post('/activate-user/:userId', [
  *         required: true
  *         description: ID unique de l'utilisateur
  *         schema:
- *           type: integer
- *           minimum: 1
- *           example: 123
+ *           type: string
+ *           format: uuid
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *     requestBody:
  *       required: true
  *       content:
@@ -308,9 +309,8 @@ router.post('/activate-user/:userId', [
  */
 router.post('/update-role/:userId', [
   param('userId')
-    .isInt({ min: 1 })
-    .withMessage('L\'ID utilisateur doit être un entier positif')
-    .toInt(),
+    .isUUID()
+    .withMessage('L\'ID utilisateur doit être un UUID valide'),
   body('role')
     .isIn(['admin', 'emetteur', 'verificateur'])
     .withMessage('Le rôle doit être l\'un des suivants: admin, emetteur, verificateur')
@@ -423,7 +423,8 @@ router.post('/update-role/:userId', [
  *                     type: object
  *                     properties:
  *                       id:
- *                         type: integer
+ *                         type: string
+ *                         format: uuid
  *                       firstname:
  *                         type: string
  *                       lastname:
@@ -487,9 +488,9 @@ router.get('/users', authenticateToken, requireRole('admin'), async (req, res) =
  *         required: true
  *         description: ID unique de l'utilisateur à suspendre
  *         schema:
- *           type: integer
- *           minimum: 1
- *           example: 123
+ *           type: string
+ *           format: uuid
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *     requestBody:
  *       required: false
  *       content:
@@ -525,9 +526,8 @@ router.get('/users', authenticateToken, requireRole('admin'), async (req, res) =
  */
 router.post('/users/:userId/suspend', [
   param('userId')
-    .isInt({ min: 1 })
-    .withMessage('L\'ID utilisateur doit être un entier positif')
-    .toInt(),
+    .isUUID()
+    .withMessage('L\'ID utilisateur doit être un UUID valide'),
   body('reason')
     .optional()
     .trim()
@@ -581,6 +581,212 @@ router.post('/users/:userId/suspend', [
     logger.error('Erreur suspension utilisateur:', error);
     res.status(500).json({ 
       error: 'Erreur lors de la suspension de l\'utilisateur' 
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/admin/roles:
+ *   get:
+ *     summary: Récupérer la liste des rôles disponibles
+ *     description: Obtient la liste des rôles système disponibles pour l'assignation aux utilisateurs
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Liste des rôles récupérée avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 roles:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                   example: [{"id": "admin", "name": "Administrateur"}, {"id": "emetteur", "name": "Émetteur"}, {"id": "verificateur", "name": "Vérificateur"}]
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ */
+router.get('/roles', async (req, res) => {
+  try {
+    const roles = [
+      { id: 'admin', name: 'Administrateur' },
+      { id: 'emetteur', name: 'Émetteur' },
+      { id: 'verificateur', name: 'Vérificateur' }
+    ];
+    
+    logger.info('Rôles récupérés par admin', { adminId: req.user.id });
+    
+    res.json({ roles });
+  } catch (error) {
+    logger.error('Erreur récupération rôles:', error);
+    res.status(500).json({ 
+      error: 'Erreur lors de la récupération des rôles' 
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/admin/logs:
+ *   get:
+ *     summary: Récupérer les logs système
+ *     description: Obtient les logs système pour le débogage et la surveillance
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: level
+ *         schema:
+ *           type: string
+ *           enum: [error, warn, info, debug]
+ *         description: Niveau de log à filtrer
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 100
+ *         description: Nombre maximum de logs à retourner
+ *     responses:
+ *       200:
+ *         description: Logs récupérés avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 logs:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       timestamp:
+ *                         type: string
+ *                       level:
+ *                         type: string
+ *                       message:
+ *                         type: string
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ */
+router.get('/logs', async (req, res) => {
+  try {
+    const { level, limit = 100 } = req.query;
+    
+    // Simuler des logs (dans un vrai système, vous utiliseriez un service de logging)
+    const logs = [
+      {
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: 'Système démarré avec succès'
+      },
+      {
+        timestamp: new Date(Date.now() - 60000).toISOString(),
+        level: 'info',
+        message: 'Nouvelle connexion utilisateur'
+      }
+    ];
+    
+    logger.info('Logs récupérés par admin', { adminId: req.user.id, level, limit });
+    
+    res.json({ logs: logs.slice(0, parseInt(limit)) });
+  } catch (error) {
+    logger.error('Erreur récupération logs:', error);
+    res.status(500).json({ 
+      error: 'Erreur lors de la récupération des logs' 
+    });
+  }
+});
+
+/**
+ * @swagger
+ * /api/admin/analytics:
+ *   get:
+ *     summary: Récupérer les analytics avancés
+ *     description: Obtient des statistiques avancées et des métriques pour l'analyse
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: period
+ *         schema:
+ *           type: string
+ *           enum: [day, week, month, year]
+ *           default: month
+ *         description: Période d'analyse
+ *     responses:
+ *       200:
+ *         description: Analytics récupérés avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 period:
+ *                   type: string
+ *                 metrics:
+ *                   type: object
+ *                   properties:
+ *                     newUsers:
+ *                       type: integer
+ *                     newDiplomas:
+ *                       type: integer
+ *                     verifications:
+ *                       type: integer
+ *                     blockchainTransactions:
+ *                       type: integer
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ */
+router.get('/analytics', async (req, res) => {
+  try {
+    const { period = 'month' } = req.query;
+    
+    // Récupérer les statistiques de base (sans filtrage par date pour l'instant)
+    const [newUsers, newDiplomas, verifications, blockchainTransactions] = await Promise.all([
+      User.count(),
+      Diploma.count(),
+      Verification.count(),
+      BlockchainTransaction.count()
+    ]);
+    
+    const analytics = {
+      period,
+      metrics: {
+        newUsers,
+        newDiplomas,
+        verifications,
+        blockchainTransactions
+      }
+    };
+    
+    logger.info('Analytics récupérés par admin', { 
+      adminId: req.user.id, 
+      period,
+      analytics 
+    });
+    
+    res.json(analytics);
+  } catch (error) {
+    logger.error('Erreur récupération analytics:', error);
+    res.status(500).json({ 
+      error: 'Erreur lors de la récupération des analytics' 
     });
   }
 });

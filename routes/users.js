@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, param } = require('express-validator');
 const { User } = require('../models');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 const logger = require('../utils/logger');
@@ -425,6 +425,7 @@ router.get('/', authenticateToken, requireRole('admin'), async (req, res) => {
 
 // Modifier le statut d'un utilisateur (admin seulement)
 router.put('/:userId/status', authenticateToken, requireRole('admin'), [
+  param('userId').isUUID().withMessage("L'ID utilisateur doit être un UUID valide"),
   body('status').isIn(['active', 'inactive', 'suspended'])
 ], async (req, res) => {
   try {
@@ -468,7 +469,8 @@ router.put('/:userId/status', authenticateToken, requireRole('admin'), [
  *         name: userId
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
  *         description: ID de l'utilisateur
  *     requestBody:
  *       required: true
@@ -495,6 +497,7 @@ router.put('/:userId/status', authenticateToken, requireRole('admin'), [
 
 // Modifier le rôle d'un utilisateur (admin seulement)
 router.put('/:userId/role', authenticateToken, requireRole('admin'), [
+  param('userId').isUUID().withMessage("L'ID utilisateur doit être un UUID valide"),
   body('role').isIn(['admin', 'emetteur', 'verificateur', 'pending'])
 ], async (req, res) => {
   try {

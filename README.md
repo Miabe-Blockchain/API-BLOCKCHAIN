@@ -203,6 +203,77 @@ Content-Type: application/json
 
 ---
 
+## 🎯 **Guide d'utilisation pour les vérificateurs**
+
+### **Fonctionnalités du rôle "verificateur"**
+
+Les utilisateurs ayant le rôle "verificateur" ont accès à des fonctionnalités spécialisées pour vérifier l'authenticité des diplômes :
+
+#### **1. Panel de vérification**
+- **Accès** : Onglet "Vérification des Diplômes" dans le dashboard
+- **Fonctionnalités** :
+  - Liste de tous les diplômes du système
+  - Recherche avancée par nom, étudiant, numéro ou institution
+  - Filtrage par statut blockchain
+  - Affichage des détails complets de chaque diplôme
+
+#### **2. Processus de vérification**
+1. **Sélection du diplôme** : Choisir un diplôme dans la liste
+2. **Vérification blockchain** : Le système vérifie automatiquement sur la blockchain
+3. **Vérification locale** : Contrôle des données en base
+4. **Résultat** : Affichage du statut d'authenticité
+5. **Traçabilité** : Enregistrement de la vérification avec notes
+
+#### **3. Fonctionnalités avancées**
+- **Notes de vérification** : Possibilité d'ajouter des commentaires
+- **Historique des vérifications** : Traçabilité complète
+- **Notifications** : Alertes en temps réel
+- **Export des résultats** : Génération de rapports
+
+#### **4. Interface utilisateur**
+- **Tableau des diplômes** : Vue d'ensemble avec statuts
+- **Modal de détails** : Informations complètes du diplôme
+- **Résultats de vérification** : Affichage clair des résultats
+- **Liens Etherscan** : Vérification directe sur la blockchain
+
+### **Comment devenir vérificateur**
+
+1. **Inscription** : Créer un compte sur la plateforme
+2. **Demande de rôle** : Contacter un administrateur
+3. **Validation** : L'admin attribue le rôle "verificateur"
+4. **Accès** : L'onglet de vérification devient disponible
+
+### **Bonnes pratiques de vérification**
+
+- ✅ **Vérifier systématiquement** la présence sur la blockchain
+- ✅ **Consulter les détails** avant validation
+- ✅ **Ajouter des notes** pour les cas particuliers
+- ✅ **Signaler les anomalies** aux administrateurs
+- ❌ **Ne pas valider** sans vérification complète
+- ❌ **Ne pas ignorer** les alertes de sécurité
+
+### **Sécurité et confidentialité**
+
+- **Accès limité** : Les vérificateurs ne peuvent pas modifier les diplômes
+- **Traçabilité** : Toutes les vérifications sont enregistrées
+- **Audit trail** : Historique complet des actions
+- **Notifications** : Alertes en cas d'activité suspecte
+
+### **API pour vérificateurs**
+
+```http
+# Vérifier un diplôme avec traçabilité
+POST /api/diplomas/{diplomaId}/verify
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "verification_notes": "Diplôme vérifié avec succès sur la blockchain"
+}
+```
+
+---
+
 ## Documentation Swagger
 
 - **URL** : [http://localhost:5000/api/docs](http://localhost:5000/api/docs)

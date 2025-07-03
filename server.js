@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const http = require('http');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
@@ -9,24 +10,32 @@ const userRoutes = require('./routes/users');
 const diplomaRoutes = require('./routes/diplomas');
 const blockchainRoutes = require('./routes/blockchain');
 const adminRoutes = require('./routes/admin');
+const notificationRoutes = require('./routes/notifications');
+const verificationRoutes = require('./routes/verifications');
 
 const { sequelize } = require('./models');
 const { initializeBlockchain } = require('./services/blockchainService');
 const logger = require('./utils/logger');
 const errorHandler = require('./middleware/errorHandler');
+const notificationService = require('./services/notificationService');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Configuration CORS pour autoriser le frontend Next.js
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   optionsSuccessStatus: 200 // Pour les navigateurs plus anciens
 };
 app.use(cors(corsOptions));
 
 // Middleware de sécurité
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -52,6 +61,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/diplomas', diplomaRoutes);
 app.use('/api/blockchain', blockchainRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/verifications', verificationRoutes);
 const setupSwagger = require('./swagger');
 setupSwagger(app); // Swagger UI sur /api/docs
 
@@ -62,6 +73,12 @@ app.get('/health', (req, res) => {
 
 // Middleware de gestion d'erreurs
 app.use(errorHandler);
+
+// Créer le serveur HTTP
+const server = http.createServer(app);
+
+// Initialiser Socket.IO
+notificationService.initialize(server);
 
 // Démarrage du serveur
 async function startServer() {
@@ -82,8 +99,11 @@ async function startServer() {
       logger.warn('Échec de l\'initialisation blockchain, continuation sans blockchain:', blockchainError.message);
     }
     
-    app.listen(PORT, () => {
-      logger.info(`Serveur démarré sur le port ${PORT}`);
+    server.listen(PORT, () => {
+      logger.info(`🚀 Serveur démarré sur le port ${PORT}`);
+      logger.info(`📚 API disponible sur http://localhost:${PORT}/api`);
+      logger.info(`📖 Documentation Swagger sur http://localhost:${PORT}/api/docs`);
+      logger.info(`🔔 Notifications en temps réel activées`);
     });
   } catch (error) {
     logger.error('Erreur lors du démarrage:', error);

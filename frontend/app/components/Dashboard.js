@@ -1,29 +1,39 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { Tab, Tabs } from 'react-bootstrap';
 import Diplomas from './Diplomas';
 import AdminPanel from './AdminPanel';
+import VerifierPanel from './VerifierPanel';
+import Settings from './Settings';
+
+const API_URL = 'http://localhost:5000/api';
 
 function Dashboard({ token }) {
     const [user, setUser] = useState(null);
     const [key, setKey] = useState('diplomas');
 
     useEffect(() => {
-        if (token) {
+        const fetchUser = async () => {
             try {
-                // Le décodage du token se fait côté client pour des raisons d'affichage,
-                // mais la validation du rôle pour les actions se fait toujours côté serveur.
-                const decodedToken = jwtDecode(token);
-                setUser(decodedToken);
+                const response = await fetch(`${API_URL}/auth/verify-token`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setUser(data.user);
+                }
             } catch (error) {
-                console.error("Failed to decode token:", error);
-                setUser(null);
+                console.error('Erreur récupération utilisateur:', error);
             }
-        }
+        };
+
+        fetchUser();
     }, [token]);
 
     if (!user) {
-        return <p>Chargement des informations...</p>;
+        return <div>Chargement...</div>;
     }
 
     return (
@@ -52,6 +62,18 @@ function Dashboard({ token }) {
                         <AdminPanel token={token} />
                     </Tab>
                 )}
+
+                {/* L'onglet Vérification n'est visible que pour les vérificateurs */}
+                {user.role === 'verificateur' && (
+                    <Tab eventKey="verification" title="Vérification des Diplômes">
+                        <VerifierPanel token={token} />
+                    </Tab>
+                )}
+
+                {/* Onglet Paramètres pour tous */}
+                <Tab eventKey="settings" title="Paramètres">
+                    <Settings token={token} user={user} isAdmin={user.role === 'admin'} />
+                </Tab>
             </Tabs>
         </div>
     );

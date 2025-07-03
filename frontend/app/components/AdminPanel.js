@@ -1,9 +1,13 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 import { Table, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { useAuth } from '../AuthContext';
 
 const API_URL = 'http://localhost:5000/api';
 
-function AdminPanel({ token }) {
+function AdminPanel() {
+    const { user } = useAuth();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,7 +17,7 @@ function AdminPanel({ token }) {
         setError(null);
         try {
             const response = await fetch(`${API_URL}/admin/users`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (!response.ok) throw new Error('Erreur lors du chargement des utilisateurs.');
             const data = await response.json();
@@ -27,15 +31,15 @@ function AdminPanel({ token }) {
 
     useEffect(() => {
         fetchUsers();
-    }, [token]);
+    }, []);
 
     const handleRoleChange = async (userId, newRole) => {
         try {
-            const response = await fetch(`${API_URL}/admin/users/${userId}`, {
-                method: 'PUT',
+            const response = await fetch(`${API_URL}/admin/update-role/${userId}`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify({ role: newRole })
             });
@@ -83,11 +87,9 @@ function AdminPanel({ token }) {
                                     onChange={(e) => handleRoleChange(user.id, e.target.value)}
                                     disabled={user.role === 'admin'} // Empêche de modifier un autre admin
                                 >
-                                    <option value="pending">En attente</option>
                                     <option value="emetteur">Émetteur</option>
                                     <option value="verificateur">Vérificateur</option>
                                     <option value="admin">Admin</option>
-                                    <option value="inactive">Inactif</option>
                                 </Form.Select>
                             </td>
                             <td>

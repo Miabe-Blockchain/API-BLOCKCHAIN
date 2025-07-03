@@ -49,6 +49,10 @@ class BlockchainService {
 
   async estimateGasForDiplomaStorage(diplomaData) {
     try {
+      if (!this.contract) {
+        throw new Error("Contrat blockchain non initialisé. Vérifiez DIPLOMA_CONTRACT_ADDRESS dans votre .env");
+      }
+      
       const gasEstimate = await this.contract.storeDiploma.estimateGas(
         diplomaData.hash,
         diplomaData.diploma_name,
@@ -79,6 +83,10 @@ class BlockchainService {
 
   async storeDiplomaOnBlockchain(diplomaData) {
     try {
+      if (!this.contract) {
+        throw new Error("Contrat blockchain non initialisé. Vérifiez DIPLOMA_CONTRACT_ADDRESS dans votre .env");
+      }
+      
       if (!this.signer) {
         throw new Error("Le portefeuille du serveur n'est pas configuré. Vérifiez votre PRIVATE_KEY dans le .env.");
       }
@@ -114,6 +122,10 @@ class BlockchainService {
 
   async verifyDiplomaOnBlockchain(hash) {
     try {
+      if (!this.contract) {
+        throw new Error("Contrat blockchain non initialisé. Vérifiez DIPLOMA_CONTRACT_ADDRESS dans votre .env");
+      }
+      
       // Récupération des détails du diplôme
       const diplomaDetails = await this.contract.getDiplomaDetails(hash);
 
